@@ -1,15 +1,31 @@
 import random
 import time
+import sys
 
-def generate_ascii_art(width=40, height=10, charset='@#*+=-:. '):
-    """Gera e exibe uma arte ASCII aleatória no terminal."""
-    for _ in range(height):
-        line = ''.join(random.choice(charset) for _ in range(width))
-        print(line)
-        time.sleep(0.1)  # Pequeno atraso para efeito visual
+# Definição de constantes para facilitar manutenção e reutilização
+WIDTH = 40
+HEIGHT = 10
+CHARSET = "@#*+=-:. "
+FRAME_DELAY = 0.1
+LOOP_DELAY = 1
+
+def generate_ascii_art(width=WIDTH, height=HEIGHT, charset=CHARSET):
+    """Gera arte ASCII como uma string única para melhor desempenho."""
+    return "\n".join(
+        "".join(random.choice(charset) for _ in range(width))
+        for _ in range(height)
+    )
+
+def display_ascii_animation():
+    """Exibe a animação ASCII em loop contínuo."""
+    try:
+        while True:
+            sys.stdout.write("\033c")  # Limpa a tela
+            sys.stdout.write(generate_ascii_art() + "\n")
+            sys.stdout.flush()
+            time.sleep(LOOP_DELAY)
+    except KeyboardInterrupt:
+        print("\nAnimação encerrada.")
 
 if __name__ == "__main__":
-    while True:
-        generate_ascii_art()
-        time.sleep(1)
-        print("\033c", end="")  # Limpa a tela para animação contínua
+    display_ascii_animation()
